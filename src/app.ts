@@ -1,57 +1,46 @@
-import http from 'node:http';
 import fs from 'node:fs';
+import http2 from 'node:http2';
 
 const PORT = 8000;
 
-const server = http.createServer((request, response) => {
-  // * Request as HTML
-  // response.writeHead(200, { 'Content-Type': 'text/html' });
-  // response.write(`<h1>URL ${request.url}</h1>`);
-  // response.end();
+const server = http2.createSecureServer({
+  key: fs.readFileSync('./keys/server.key'),
+  cert: fs.readFileSync('./keys/server.crt'),
+}, (request, response) => {
 
-  // * Request as JSON
-  // const data = {
-  //   name: 'Daniel Gonzalez',
-  //   age: 24,
-  //   position: 'Full Stack Developer',
-  //   address: {
-  //     street: '222',
-  //     city: 'Langley',
-  //     province: 'British Columbia',
-  //     code: 'V2Y 2XY',
-  //   },
-  // };
+  console.log(request.url);
+  
+  try {
+    if (request.url === '/') {
+      const htmlFile = fs.readFileSync('./public/index.html', 'utf-8');
+      response.writeHead(200, { 'Content-Type': 'text/html', });
+      response.write(htmlFile);
+      response.end();
+      return;
+    }
 
-  // response.writeHead(200, { 'Content-Type': 'application/json' });
-  // response.write(JSON.stringify(data));
-  // response.end();
+    if (request.url?.endsWith('.png')) {
+      response.writeHead(200, { 'Content-Type': 'image/png' });
+    }
+  
+    if (request.url?.endsWith('.css')) {
+      response.writeHead(200, { 'Content-Type': 'text/css', });
+    }
+  
+    if (request.url?.endsWith('.js')) {
+      response.writeHead(200, { 'Content-Type': 'application/javascript', });
+    }
+  
+    const responseContent = fs.readFileSync(`./public${request.url}`, 'utf-8');
+    response.write(responseContent);
+    response.end();
 
-  if (request.url === '/') {
-    const htmlFile = fs.readFileSync('./public/index.html', 'utf-8');
-    response.writeHead(200, { 'Content-Type': 'text/html', });
+  } catch (error) {
+    const htmlFile = fs.readFileSync('./public/404.html', 'utf-8');
+    response.writeHead(404, { 'Content-Type': 'text/html' });
     response.write(htmlFile);
     response.end();
-    return;
   }
-
-  // else {
-  //   const htmlFile = fs.readFileSync('./public/404.html', 'utf-8');
-  //   response.writeHead(404, { 'Content-Type': 'text/html' });
-  //   response.write(htmlFile);
-  //   response.end();
-  // }
-
-  if (request.url?.endsWith('.css')) {
-    response.writeHead(200, { 'Content-Type': 'text/css', });
-  }
-
-  if (request.url?.endsWith('.js')) {
-    response.writeHead(200, { 'Content-Type': 'application/javascript', });
-  }
-
-  const responseContent = fs.readFileSync(`./public${request.url}`, 'utf-8');
-  response.write(responseContent);
-  response.end();
 
 });
 

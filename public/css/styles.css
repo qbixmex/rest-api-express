@@ -21,6 +21,9 @@ h1 {
 p:last-child {
   margin-bottom: 0;
 }
+.text-error {
+  color: hsl(350, 80%, 42%);
+}
 .error {
   background-color: crimson;
   padding: 20px;
