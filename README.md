@@ -56,7 +56,7 @@ echo 'console.log("NodeJs Running")' > src/index.ts
 // ...
 "scripts": {
   "dev": "tsnd --respawn src/index.ts -- src/app.ts",
-  "build": "rimraf ./dist && && tsc",
+  "build": "rimraf ./dist && tsc",
   "start": "npm run build && node dist/app.js"
 },
 // ...
