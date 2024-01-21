@@ -1,2 +1,11 @@
 ### GET ALL TODOS
-GET http://localhost:3000/api/todos
+GET http://localhost:3000/api/v1/todos
+
+### GET TODO BY ID
+GET http://localhost:3000/api/v1/todos/b981e38f
+
+### UPDATE TODO BY ID
+PATCH http://localhost:3000/api/v1/todos/b981e38f
+
+### DELETE TODO BY ID
+DELETE http://localhost:3000/api/v1/todos/b981e38f

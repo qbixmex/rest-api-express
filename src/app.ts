@@ -1,11 +1,11 @@
 import ENVS from './config/envs';
-import AppRoutes from './presentation/routes';
+import AppRouter from './presentation/router';
 import Server from './presentation/server';
 
 const main = async () => {
   const server = new Server({
     port: ENVS.PORT,
-    router: AppRoutes.routes,
+    router: AppRouter.routes,
     public_path: ENVS.PUBLIC_PATH,
   });
   server.start();
