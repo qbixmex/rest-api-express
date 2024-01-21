@@ -1,0 +1,22 @@
+{
+  "name": "rest-web",
+  "version": "0.0.0",
+  "description": "REST Server Web",
+  "main": "index.js",
+  "scripts": {
+    "dev": "tsnd --respawn src/index.ts -- src/app.ts",
+    "build": "rimraf ./dist && && tsc",
+    "start": "npm run build && node dist/app.js"
+  },
+  "keywords": ["typescript", "node", "express"],
+  "author": "Daniel Gonzalez",
+  "license": "UNLICENSED",
+  "devDependencies": {
+    "@types/node": "^20.11.5",
+    "@types/yargs": "^17.0.32",
+    "rimraf": "^5.0.5",
+    "ts-node-dev": "^2.0.0",
+    "typescript": "^5.3.3",
+    "yargs": "^17.7.2"
+  }
+}
