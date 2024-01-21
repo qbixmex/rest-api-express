@@ -1,9 +1,12 @@
 import fs from 'node:fs';
-import http from 'node:http';
+import http2 from 'node:http2';
 
 const PORT = 8000;
 
-const server = http.createServer((request, response) => {
+const server = http2.createSecureServer({
+  key: fs.readFileSync('./keys/server.key'),
+  cert: fs.readFileSync('./keys/server.crt'),
+}, (request, response) => {
 
   console.log(request.url);
   

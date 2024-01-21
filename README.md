@@ -268,8 +268,20 @@ setupFiles: [
 ], 
 ```
 
-### 22 Generate Certificates
+### 22. Generate Certificates
 
 ```bash
 openssl req -x509 -sha256 -nodes -days 365 -newkey rsa:2048 -keyout server.key -out server.crt
+```
+
+### 23. Express JS
+
+```bash
+# Install production package
+npm i express 
+```
+
+```bash
+# Install types as development package for typescript
+npm i @types/express
 ```
