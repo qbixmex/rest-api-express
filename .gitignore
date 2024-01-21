@@ -1,4 +1,10 @@
+# Logs
 /node_modules
 /dist
 
+# Certificates
 /keys
+
+# Environment variables
+.env
+.env.test
