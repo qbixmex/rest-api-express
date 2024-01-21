@@ -1,12 +1,12 @@
 {
   "name": "rest-web",
-  "version": "0.7.4",
+  "version": "0.8.0",
   "description": "REST Server Web",
   "main": "app.js",
   "scripts": {
     "dev": "tsnd --respawn --clear -- src/app.ts",
     "build": "rimraf ./dist && tsc",
-    "start": "node ./dist/app.js"
+    "start": "node dist/app.js"
   },
   "keywords": [
     "typescript",
