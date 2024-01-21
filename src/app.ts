@@ -28,15 +28,31 @@ const server = http.createServer((request, response) => {
 
   if (request.url === '/') {
     const htmlFile = fs.readFileSync('./public/index.html', 'utf-8');
-    response.writeHead(200, { 'Content-Type': 'text/html' });
+    response.writeHead(200, { 'Content-Type': 'text/html', });
     response.write(htmlFile);
     response.end();
-  } else {
-    const htmlFile = fs.readFileSync('./public/404.html', 'utf-8');
-    response.writeHead(404, { 'Content-Type': 'text/html' });
-    response.write(htmlFile);
-    response.end();
+    return;
   }
+
+  // else {
+  //   const htmlFile = fs.readFileSync('./public/404.html', 'utf-8');
+  //   response.writeHead(404, { 'Content-Type': 'text/html' });
+  //   response.write(htmlFile);
+  //   response.end();
+  // }
+
+  if (request.url?.endsWith('.css')) {
+    response.writeHead(200, { 'Content-Type': 'text/css', });
+  }
+
+  if (request.url?.endsWith('.js')) {
+    response.writeHead(200, { 'Content-Type': 'application/javascript', });
+  }
+
+  const responseContent = fs.readFileSync(`./public${request.url}`, 'utf-8');
+  response.write(responseContent);
+  response.end();
+
 });
 
 server.listen(PORT, () => {
