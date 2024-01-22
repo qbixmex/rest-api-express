@@ -79,9 +79,9 @@ class TodoController {
   ) => {
     const id = request.params.id;
 
-    const todo = todos.find(todo => todo.id === id);
+    const todoFound = todos.find(todo => todo.id === id);
 
-    if (!todo) {
+    if (!todoFound) {
       return response.status(404).json({
         ok: false,
         error: `Todo with id: ${id}, not found`,
@@ -91,23 +91,35 @@ class TodoController {
     const { title, done } = request.body;
 
     //* Update todo in todos array
-    todo.title = title ?? todo.title;
-    todo.done = done ?? todo.done;
-    todo.updatedAt = new Date() ?? todo.updatedAt;
+    todoFound.title = title ?? todoFound.title;
+    todoFound.done = done ?? todoFound.done;
+    todoFound.updatedAt = new Date() ?? todoFound.updatedAt;
 
     return response.json({
       ok: true,
-      todo,
+      todo: todoFound,
     });
   }
 
   public deleteTodo = (
-    request: Request,
+    request: Request<{ id: string }>,
     response: Response
   ) => {
-    return response.json({
-      message: "Delete Todo not implemented."
-    });
+    const id = request.params.id;
+
+    const todoFound = todos.find(todo => todo.id === id);
+
+    if (!todoFound) {
+      return response.status(404).json({
+        ok: false,
+        error: `Todo with id: ${id}, not found`,
+      });
+    }
+
+    const todoIndex = todos.indexOf(todoFound);
+    todos.splice(todoIndex, 1);
+
+    return response.json({ ok: true });
   }
 
 }
