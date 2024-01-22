@@ -25,6 +25,8 @@ class Server {
     });
 
     //* Middlewares
+    this.app.use(express.json());
+    this.app.use(express.urlencoded({ extended: true }));
     this.app.use(this.routes);
 
     //* Single Page Application (SPA) like React, Vue, Angular, Solid, Qwik, etc.

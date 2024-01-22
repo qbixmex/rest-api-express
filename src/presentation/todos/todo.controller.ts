@@ -1,12 +1,21 @@
+import crypto from "node:crypto";
 import { Request, Response } from "express";
 import { todos } from "./data/todos";
+
+type Todo = {
+  id: string;
+  title: string;
+  done: boolean;
+  createdAt: Date;
+  updatedAt: Date;
+};
 
 class TodoController {
 
   // TODO: Implement Dependency Injection from Repository
   constructor() {}
 
-  public getTodos(_request: Request, response: Response) {
+  public getTodos = (_request: Request, response: Response) => {
     return response.status(200).json(todos);
   }
 
@@ -31,7 +40,37 @@ class TodoController {
     });
   }
 
-  public update = (
+  public createTodo = (
+    request: Request<{}, { title: string }>,
+    response: Response
+  ) => {
+    const { title } = request.body;
+
+    if (!title) {
+      return response.status(400).json({
+        ok: false,
+        error: "title is required !",
+      });
+    }
+
+    const newTodo: Todo = {
+      id: crypto.randomUUID(),
+      title,
+      done: false,
+      createdAt: new Date(),
+      updatedAt: new Date(),
+    };
+
+    //* Add newTodo to todos array
+    todos.push(newTodo);
+
+    return response.json({
+     ok: true,
+     todo: newTodo,
+    });
+  }
+
+  public updateTodo = (
     request: Request,
     response: Response
   ) => {

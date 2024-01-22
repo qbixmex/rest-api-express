@@ -11,7 +11,8 @@ class TodoRoutes {
     
     router.get('/', todoController.getTodos);
     router.get('/:id', todoController.getTodoById);
-    router.patch('/:id', todoController.update);
+    router.post('/', todoController.createTodo);
+    router.patch('/:id', todoController.updateTodo);
     router.delete('/:id', todoController.deleteTodo);
 
     return router;
