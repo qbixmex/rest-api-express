@@ -2,7 +2,7 @@
 GET http://localhost:3000/api/v1/todos
 
 ### GET TODO BY ID
-GET http://localhost:3000/api/v1/todos/b981e38f
+GET http://localhost:3000/api/v1/todos/8b2fc14e
 
 ### UPDATE TODO BY ID
 PATCH http://localhost:3000/api/v1/todos/b981e38f

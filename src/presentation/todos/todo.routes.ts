@@ -10,7 +10,7 @@ class TodoRoutes {
     const todoController = new TodoController();
     
     router.get('/', todoController.getTodos);
-    router.get('/:id', todoController.getTodo);
+    router.get('/:id', todoController.getTodoById);
     router.patch('/:id', todoController.update);
     router.delete('/:id', todoController.deleteTodo);
 

@@ -10,16 +10,43 @@ class TodoController {
     return response.status(200).json(todos);
   }
 
-  public getTodo(request: Request, response: Response) {
-    response.status(200).json({ message: "Get Todo not implemented." });
+  public getTodoById = (
+    request: Request<{ id: string }>,
+    response: Response
+  ) => {
+    const id = request.params.id;
+
+    const todo = todos.find(todo => todo.id === id);
+
+    if (!todo) {
+      return response.status(404).json({
+        ok: false,
+        error: `Todo with id: ${id}, not found`,
+      });
+    }
+
+    return response.json({
+      ok: true,
+      todo,
+    });
   }
 
-  public update(request: Request, response: Response) {
-    response.status(200).json({ message: "Update Todo not implemented." });
+  public update = (
+    request: Request,
+    response: Response
+  ) => {
+    return response.json({
+      message: "Update Todo not implemented."
+    });
   }
 
-  public deleteTodo(request: Request, response: Response) {
-    response.status(200).json({ message: "Delete Todo not implemented." });
+  public deleteTodo = (
+    request: Request,
+    response: Response
+  ) => {
+    return response.json({
+      message: "Delete Todo not implemented."
+    });
   }
 
 }
