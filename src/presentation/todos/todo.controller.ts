@@ -1,10 +1,31 @@
 import { Request, Response } from "express";
 import prisma from './data/postgres';
+import {
+  CreateTodoDTO,
+  UpdateTodoDTO
+} from '../../domain/dtos/todos';
 
 class TodoController {
 
   // TODO: Implement Dependency Injection from Repository
   constructor() {}
+
+  public createTodo = async (
+    request: Request<{}, { title: string }>,
+    response: Response
+  ) => {
+    const [error, createTodoDTO] = CreateTodoDTO.create(request.body);
+
+    if (error) {
+      return response.status(400).json({ error });
+    }
+
+    const todo = await prisma.todo.create({
+      data: createTodoDTO!,
+    });
+
+    return response.status(201).json(todo);
+  };
 
   public getTodos = async (
     _request: Request,
@@ -33,35 +54,23 @@ class TodoController {
     return response.json(todo);
   };
 
-  public createTodo = async (
-    request: Request<{}, { title: string }>,
-    response: Response
-  ) => {
-    const payload = request.body;
-
-    if (!payload.title) {
-      return response.status(400).json({ error: "title is required ❗️" });
-    }
-
-    const todo = await prisma.todo.create({
-      data: {
-        title: payload.title,
-      },
-    });
-
-    return response.status(201).json(todo);
-  };
-
   public updateTodo = async (
     request: Request<{ id: string }, {}, {
       title?: string;
-      done?: boolean;
       completedAt?: Date;
     }>,
     response: Response
   ) => {
     const todoId = request.params.id;
-    const payload = request.body;
+
+    const [ error, updateTodoDTO ] = UpdateTodoDTO.create({
+      ...request.body,
+      id: todoId,
+    });
+
+    if (error) {
+      return response.status(400).json({ error });
+    }
 
     const foundTodo = await prisma.todo.findFirst({
       where: { id: todoId }
@@ -75,11 +84,7 @@ class TodoController {
 
     const updatedTodo = await prisma.todo.update({
       where: { id: todoId },
-      data: {
-        title: payload.title ?? foundTodo.title,
-        completedAt: payload.completedAt ?? foundTodo.completedAt,
-        updatedAt: new Date(),
-      }
+      data: updateTodoDTO!.values,
     });
 
     return response.json(updatedTodo);
