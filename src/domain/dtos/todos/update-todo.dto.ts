@@ -16,9 +16,11 @@ class UpdateTodoDTO {
     const outputObject: { [ key: string ]: any } = {};
     if (this.title) {
       outputObject.title = this.title;
-      outputObject.completedAt = this.completedAt;
-      outputObject.updatedAt = new Date();
     }
+    if (this.completedAt) {
+      outputObject.completedAt = this.completedAt;
+    }
+    outputObject.updatedAt = new Date();
     return outputObject;
   }
 
@@ -52,7 +54,7 @@ class UpdateTodoDTO {
 
     return [
       undefined,
-      new UpdateTodoDTO(id, title, completedAtDate),
+      new UpdateTodoDTO(id, title, completedAt),
     ];
   }
 }

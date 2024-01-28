@@ -29,7 +29,7 @@ class TodoEntity {
       }
     }
 
-    return new TodoEntity(id, title, newCompletedAt);
+    return new TodoEntity(id, title, completedAt);
 
   }
 }

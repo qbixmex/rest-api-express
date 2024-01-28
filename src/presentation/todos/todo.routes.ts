@@ -1,5 +1,6 @@
 import { Router } from "express";
 import TodoController from "./todo.controller";
+import { TodoDataSourceImplementation, TodoRepositoryImplementation } from "../../infraestructure";
 
 class TodoRoutes {
 
@@ -7,8 +8,10 @@ class TodoRoutes {
 
     const router = Router();
 
-    const todoController = new TodoController();
-    
+    const datasource = new TodoDataSourceImplementation();
+    const repository = new TodoRepositoryImplementation(datasource);
+    const todoController = new TodoController(repository);
+
     router.get('/', todoController.getTodos);
     router.get('/:id', todoController.getTodoById);
     router.post('/', todoController.createTodo);
