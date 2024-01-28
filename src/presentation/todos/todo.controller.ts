@@ -19,25 +19,23 @@ class TodoController {
     return response.status(200).json(todos);
   };
 
-  public getTodoById = (
+  public getTodoById = async (
     request: Request<{ id: string }>,
     response: Response
   ) => {
-    // const id = request.params.id;
+    const todoId = request.params.id;
 
-    // const todo = todos.find(todo => todo.id === id);
+    const todo = await prisma.todo.findUnique({
+      where: { id: todoId }
+    });
 
-    // if (!todo) {
-    //   return response.status(404).json({
-    //     ok: false,
-    //     error: `Todo with id: ${id}, not found`,
-    //   });
-    // }
+    if (!todo) {
+      return response.status(404).json({
+        error: `Todo with id: ${todoId}, not found !`,
+      });
+    }
 
-    // return response.json({
-    //   ok: true,
-    //   todo,
-    // });
+    return response.json(todo);
   };
 
   public createTodo = async (
