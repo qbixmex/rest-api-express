@@ -1,14 +1,6 @@
 import { Request, Response } from "express";
 import prisma from './data/postgres';
 
-type Todo = {
-  id: string;
-  title: string;
-  done: boolean;
-  createdAt: Date | null;
-  updatedAt: Date | null;
-};
-
 class TodoController {
 
   // TODO: Implement Dependency Injection from Repository
@@ -28,7 +20,7 @@ class TodoController {
   ) => {
     const todoId = request.params.id;
 
-    const todo = await prisma.todo.findUnique({
+    const todo = await prisma.todo.findFirst({
       where: { id: todoId }
     });
 
@@ -70,7 +62,7 @@ class TodoController {
     const todoId = request.params.id;
     const payload = request.body;
 
-    const foundTodo = await prisma.todo.findUnique({
+    const foundTodo = await prisma.todo.findFirst({
       where: { id: todoId }
     });
 
