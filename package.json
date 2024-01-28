@@ -1,6 +1,6 @@
 {
   "name": "rest-web",
-  "version": "0.21.5",
+  "version": "1.0.0",
   "description": "REST Server Web",
   "main": "app.js",
   "scripts": {
