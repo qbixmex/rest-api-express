@@ -1,6 +1,4 @@
-import crypto from "node:crypto";
 import { Request, Response } from "express";
-import { todos } from "./data/todos";
 import prisma from './data/postgres';
 
 type Todo = {
@@ -16,7 +14,8 @@ class TodoController {
   // TODO: Implement Dependency Injection from Repository
   constructor() {}
 
-  public getTodos = (_request: Request, response: Response) => {
+  public getTodos = async (_request: Request, response: Response) => {
+    const todos = await prisma.todo.findMany();
     return response.status(200).json(todos);
   };
 
@@ -24,21 +23,21 @@ class TodoController {
     request: Request<{ id: string }>,
     response: Response
   ) => {
-    const id = request.params.id;
+    // const id = request.params.id;
 
-    const todo = todos.find(todo => todo.id === id);
+    // const todo = todos.find(todo => todo.id === id);
 
-    if (!todo) {
-      return response.status(404).json({
-        ok: false,
-        error: `Todo with id: ${id}, not found`,
-      });
-    }
+    // if (!todo) {
+    //   return response.status(404).json({
+    //     ok: false,
+    //     error: `Todo with id: ${id}, not found`,
+    //   });
+    // }
 
-    return response.json({
-      ok: true,
-      todo,
-    });
+    // return response.json({
+    //   ok: true,
+    //   todo,
+    // });
   };
 
   public createTodo = async (
@@ -70,49 +69,49 @@ class TodoController {
     }>,
     response: Response
   ) => {
-    const id = request.params.id;
+    // const id = request.params.id;
 
-    const todoFound = todos.find(todo => todo.id === id);
+    // const todoFound = todos.find(todo => todo.id === id);
 
-    if (!todoFound) {
-      return response.status(404).json({
-        ok: false,
-        error: `Todo with id: ${id}, not found`,
-      });
-    }
+    // if (!todoFound) {
+    //   return response.status(404).json({
+    //     ok: false,
+    //     error: `Todo with id: ${id}, not found`,
+    //   });
+    // }
 
-    const { title, done } = request.body;
+    // const { title, done } = request.body;
 
-    //* Update todo in todos array
-    todoFound.title = title ?? todoFound.title;
-    todoFound.done = done ?? todoFound.done;
-    todoFound.updatedAt = new Date() ?? todoFound.updatedAt;
+    // //* Update todo in todos array
+    // todoFound.title = title ?? todoFound.title;
+    // todoFound.done = done ?? todoFound.done;
+    // todoFound.updatedAt = new Date() ?? todoFound.updatedAt;
 
-    return response.json({
-      ok: true,
-      todo: todoFound,
-    });
+    // return response.json({
+    //   ok: true,
+    //   todo: todoFound,
+    // });
   };
 
   public deleteTodo = (
     request: Request<{ id: string }>,
     response: Response
   ) => {
-    const id = request.params.id;
+    // const id = request.params.id;
 
-    const todoFound = todos.find(todo => todo.id === id);
+    // const todoFound = todos.find(todo => todo.id === id);
 
-    if (!todoFound) {
-      return response.status(404).json({
-        ok: false,
-        error: `Todo with id: ${id}, not found`,
-      });
-    }
+    // if (!todoFound) {
+    //   return response.status(404).json({
+    //     ok: false,
+    //     error: `Todo with id: ${id}, not found`,
+    //   });
+    // }
 
-    const todoIndex = todos.indexOf(todoFound);
-    todos.splice(todoIndex, 1);
+    // const todoIndex = todos.indexOf(todoFound);
+    // todos.splice(todoIndex, 1);
 
-    return response.json({ ok: true });
+    // return response.json({ ok: true });
   }
 
 };
