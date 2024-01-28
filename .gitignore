@@ -5,6 +5,9 @@
 # Certificates
 /keys
 
+# Database Volumes
+/postgres
+
 # Environment variables
 .env
 .env.test

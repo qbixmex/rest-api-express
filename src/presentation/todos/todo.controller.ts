@@ -1,6 +1,7 @@
 import crypto from "node:crypto";
 import { Request, Response } from "express";
 import { todos } from "./data/todos";
+import prisma from './data/postgres';
 
 type Todo = {
   id: string;
@@ -17,7 +18,7 @@ class TodoController {
 
   public getTodos = (_request: Request, response: Response) => {
     return response.status(200).json(todos);
-  }
+  };
 
   public getTodoById = (
     request: Request<{ id: string }>,
@@ -38,37 +39,29 @@ class TodoController {
       ok: true,
       todo,
     });
-  }
+  };
 
-  public createTodo = (
+  public createTodo = async (
     request: Request<{}, { title: string }>,
     response: Response
   ) => {
-    const { title } = request.body;
+    const payload = request.body;
 
-    if (!title) {
+    if (!payload.title) {
       return response.status(400).json({
         ok: false,
         error: "title is required !",
       });
     }
 
-    const newTodo: Todo = {
-      id: crypto.randomUUID(),
-      title,
-      done: false,
-      createdAt: new Date(),
-      updatedAt: new Date(),
-    };
-
-    //* Add newTodo to todos array
-    todos.push(newTodo);
-
-    return response.status(201).json({
-     ok: true,
-     todo: newTodo,
+    const todo = await prisma.todo.create({
+      data: {
+        title: payload.title,
+      },
     });
-  }
+
+    return response.status(201).json(todo);
+  };
 
   public updateTodo = (
     request: Request<{ id: string }, {}, {
@@ -99,7 +92,7 @@ class TodoController {
       ok: true,
       todo: todoFound,
     });
-  }
+  };
 
   public deleteTodo = (
     request: Request<{ id: string }>,
@@ -122,6 +115,6 @@ class TodoController {
     return response.json({ ok: true });
   }
 
-}
+};
 
 export default TodoController;

@@ -117,6 +117,18 @@ git tag 0.0.0
 }
 ```
 
+## Express JS
+
+```bash
+# Install production package
+npm i express 
+```
+
+```bash
+# Install types as development package for typescript
+npm i @types/express
+```
+
 ## Install testing dependencies
 
 ```bash
@@ -169,14 +181,15 @@ touch .env.template
 
 **1. Put the following data to: ```.env.template```:**
 
-```
-PORT=
-PUBLIC_PATH=
+```ini
+PORT=#3000
+PUBLIC_PATH=#public
 ```
 
 **2. Copy and paste from ```.env.template``` to ```.env``` and edit values:**
 
-```
+```ini
+# Don't forget to remove hash tag
 PORT=3000
 PUBLIC_PATH=public
 ```
@@ -214,13 +227,39 @@ docker compose up -d
 
 ## Prisma
 
-**1. Generate Client**
+**1. Install Dependencies**
+
+```bash
+npm i --save prisma @prisma/client
+```
+
+**2. Initialize with provider**
+
+```bash
+npx prisma init --datasource-provider postgresql
+```
+
+**3. Add your model to schema.prisma:**
+
+```typescript
+// ...
+// Example:
+model Todo {
+  id        String   @id @default(uuid())
+  title     String
+  done      Boolean  @default(false)
+  createdAt DateTime @default(now())
+  updatedAt DateTime @default(now())
+}
+```
+
+**4. Generate Client**
 
 ```bash
 npx prisma generate
 ```
 
-**2. Migrate Tables**
+**5. Migrate Tables**
 
 ```bash
 npx prisma migrate dev
@@ -238,23 +277,32 @@ npx prisma migrate dev
 
 **Add this following code**
 
-```
+```ini
+# GLOBALS
 PORT=3000
 HOST=http://localhost
+PUBLIC_PATH=CUSTOM_PATH
+
+# MAILER
 MAILER_SERVICE=gmail
 MAILER_EMAIL=user@domain.com
 MAILER_SECRET_KEY=# secret key
 PRODUCTION=false
 
-MONGO_URL="mongodb://<change_user>:<change_password>@localhost:27017"
+# MONGO
+MONGO_URL="mongodb://<CHANGE_USER>:<CHANGE_PASSWORD>@localhost:27017"
 MONGO_DB_NAME=DATABASE_NAME
 MONGO_USER=DATABASE_USERNAME
 MONGO_PASSWORD=DATABASE_PASSWORD
 
-POSTGRES_URL="postgres://<change_user>:<change_password>@localhost:5432/DATABASE_NAME"
+# POSTGRES
+POSTGRES_URL="postgres://<CHANGE_USER>:<CHANGE_PASSWORD>@localhost:5432/DATABASE_NAME"
 POSTGRES_DB=DATABASE_NAME
 POSTGRES_USER=DATABASE_USERNAME
 POSTGRES_PASSWORD=DATABASE_PASSWORD
+
+# ENVIRONMENT
+NODE_ENV=YOUR_ENVIROMENT_LIKE_-_DEVELOPMENT_-_OR_-_PRODUCTION
 ```
 
 ## Create .env.test and modify necessary changes
@@ -265,10 +313,10 @@ cp .env.test.template .env.test
 
 ## Don't forget to ignore .env.test in .gitignore
 
-```text
-...
+```ini
+# ...
 
-# Local env files
+# Local .env files
 .env
 .env.test # <-- Append this line
 ```
@@ -296,16 +344,4 @@ setupFiles: [
 
 ```bash
 openssl req -x509 -sha256 -nodes -days 365 -newkey rsa:2048 -keyout server.key -out server.crt
-```
-
-## Express JS
-
-```bash
-# Install production package
-npm i express 
-```
-
-```bash
-# Install types as development package for typescript
-npm i @types/express
 ```

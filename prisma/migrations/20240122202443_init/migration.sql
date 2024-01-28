@@ -1,0 +1,10 @@
+-- CreateTable
+CREATE TABLE "Todo" (
+    "id" TEXT NOT NULL,
+    "title" VARCHAR(100) NOT NULL,
+    "done" BOOLEAN NOT NULL DEFAULT false,
+    "createdAt" TIMESTAMP(3) DEFAULT CURRENT_TIMESTAMP,
+    "updatedAt" TIMESTAMP(3) DEFAULT CURRENT_TIMESTAMP,
+
+    CONSTRAINT "Todo_pkey" PRIMARY KEY ("id")
+);
