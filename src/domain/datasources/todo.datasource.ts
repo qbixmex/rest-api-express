@@ -1,4 +1,4 @@
-import { CreateTodoDTO, UpdateTodoDTO } from '../dtos/todos';
+import { CreateTodoDTO, UpdateTodoDTO } from '../dtos';
 import { TodoEntity } from '../entities';
 
 abstract class TodoDataSource {

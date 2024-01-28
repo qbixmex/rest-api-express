@@ -2,27 +2,17 @@ import { TodoDataSource } from '../datasources';
 import { CreateTodoDTO, UpdateTodoDTO } from '../dtos/todos';
 import { TodoEntity } from '../entities';
 
-class TodoRepository implements TodoDataSource {
+abstract class TodoRepository {
 
-  create(createTodoDTO: CreateTodoDTO): Promise<TodoEntity> {
-    throw new Error("Method not implemented.");
-  }
+  abstract create(createTodoDTO: CreateTodoDTO): Promise<TodoEntity>;
 
-  getAll(): Promise<TodoEntity[]> {
-    throw new Error("Method not implemented.");
-  }
+  abstract getAll(): Promise<TodoEntity[]>;
 
-  findById(id: string): Promise<TodoEntity> {
-    throw new Error("Method not implemented.");
-  }
+  abstract findById(id: string): Promise<TodoEntity>;
 
-  updateById(updateTodoDTO: UpdateTodoDTO): Promise<TodoEntity> {
-    throw new Error("Method not implemented.");
-  }
+  abstract updateById(updateTodoDTO: UpdateTodoDTO): Promise<TodoEntity>;
 
-  deleteById(id: string): Promise<TodoEntity> {
-    throw new Error("Method not implemented.");
-  }
+  abstract deleteById(id: string): Promise<TodoEntity>;
 
 }
 

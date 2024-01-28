@@ -1,9 +1,9 @@
 import { validate as uuidValidate } from 'uuid';
+
 // type UpdateTodoDTOProps = {
 //   title?: string;
 //   completedAt?: Date;
 // };
-
 
 class UpdateTodoDTO {
   constructor(
