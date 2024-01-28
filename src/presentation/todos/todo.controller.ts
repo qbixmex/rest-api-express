@@ -60,35 +60,36 @@ class TodoController {
     return response.status(201).json(todo);
   };
 
-  public updateTodo = (
+  public updateTodo = async (
     request: Request<{ id: string }, {}, {
       title?: string;
       done?: boolean;
     }>,
     response: Response
   ) => {
-    // const id = request.params.id;
+    const todoId = request.params.id;
+    const payload = request.body;
 
-    // const todoFound = todos.find(todo => todo.id === id);
+    const foundTodo = await prisma.todo.findUnique({
+      where: { id: todoId }
+    });
 
-    // if (!todoFound) {
-    //   return response.status(404).json({
-    //     ok: false,
-    //     error: `Todo with id: ${id}, not found`,
-    //   });
-    // }
+    if (!foundTodo) {
+      return response.status(404).json({
+        ok: false,
+        error: `Todo with id: ${todoId}, not found !`,
+      });
+    }
 
-    // const { title, done } = request.body;
+    const updatedTodo = await prisma.todo.update({
+      where: { id: todoId },
+      data: {
+        title: payload.title ?? foundTodo.title,
+        done: payload.done ?? foundTodo.done,
+      }
+    });
 
-    // //* Update todo in todos array
-    // todoFound.title = title ?? todoFound.title;
-    // todoFound.done = done ?? todoFound.done;
-    // todoFound.updatedAt = new Date() ?? todoFound.updatedAt;
-
-    // return response.json({
-    //   ok: true,
-    //   todo: todoFound,
-    // });
+    return response.json(updatedTodo);
   };
 
   public deleteTodo = (
