@@ -56,6 +56,7 @@ class TodoController {
     request: Request<{ id: string }, {}, {
       title?: string;
       done?: boolean;
+      completedAt?: Date;
     }>,
     response: Response
   ) => {
@@ -76,7 +77,8 @@ class TodoController {
       where: { id: todoId },
       data: {
         title: payload.title ?? foundTodo.title,
-        done: payload.done ?? foundTodo.done,
+        completedAt: payload.completedAt ?? foundTodo.completedAt,
+        updatedAt: new Date(),
       }
     });
 
