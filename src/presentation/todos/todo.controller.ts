@@ -5,8 +5,8 @@ type Todo = {
   id: string;
   title: string;
   done: boolean;
-  createdAt: Date;
-  updatedAt: Date;
+  createdAt: Date | null;
+  updatedAt: Date | null;
 };
 
 class TodoController {
@@ -14,7 +14,10 @@ class TodoController {
   // TODO: Implement Dependency Injection from Repository
   constructor() {}
 
-  public getTodos = async (_request: Request, response: Response) => {
+  public getTodos = async (
+    _request: Request,
+    response: Response
+  ) => {
     const todos = await prisma.todo.findMany();
     return response.status(200).json(todos);
   };
@@ -31,7 +34,7 @@ class TodoController {
 
     if (!todo) {
       return response.status(404).json({
-        error: `Todo with id: ${todoId}, not found !`,
+        error: `Todo with id: ${todoId}, not found ❗️`,
       });
     }
 
@@ -45,10 +48,7 @@ class TodoController {
     const payload = request.body;
 
     if (!payload.title) {
-      return response.status(400).json({
-        ok: false,
-        error: "title is required !",
-      });
+      return response.status(400).json({ error: "title is required ❗️" });
     }
 
     const todo = await prisma.todo.create({
@@ -76,8 +76,7 @@ class TodoController {
 
     if (!foundTodo) {
       return response.status(404).json({
-        ok: false,
-        error: `Todo with id: ${todoId}, not found !`,
+        error: `Todo with id: ${todoId}, not found ❗️`
       });
     }
 
@@ -92,25 +91,33 @@ class TodoController {
     return response.json(updatedTodo);
   };
 
-  public deleteTodo = (
+  public deleteTodo = async (
     request: Request<{ id: string }>,
     response: Response
   ) => {
-    // const id = request.params.id;
+    const todoId = request.params.id;
 
-    // const todoFound = todos.find(todo => todo.id === id);
+    const todoFound = await prisma.todo.findUnique({
+      where: {
+        id: todoId
+      }
+    });
 
-    // if (!todoFound) {
-    //   return response.status(404).json({
-    //     ok: false,
-    //     error: `Todo with id: ${id}, not found`,
-    //   });
-    // }
+    if (!todoFound) {
+      return response.status(404).json({
+        error: `Todo with id: ${todoId}, not found ❗️`,
+      });
+    }
 
-    // const todoIndex = todos.indexOf(todoFound);
-    // todos.splice(todoIndex, 1);
+    await prisma.todo.delete({
+      where: {
+        id: todoId
+      }
+    });
 
-    // return response.json({ ok: true });
+    return response.json({
+      message: `Todo with id: ${todoId} deleted successfully 👍✅`
+    });
   }
 
 };
