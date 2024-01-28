@@ -33,7 +33,7 @@ class UpdateTodoDTO {
       ];
     }
 
-    if (typeof title !== 'string') {
+    if (title && typeof title !== 'string') {
       return [
         'title property must be a valid string !',
         undefined
