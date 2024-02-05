@@ -7,6 +7,7 @@
 
 # Database Volumes
 /postgres
+/postgres_test
 
 # Environment variables
 .env

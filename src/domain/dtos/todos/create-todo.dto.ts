@@ -13,6 +13,13 @@ class CreateTodoDTO {
       ];
     }
 
+    if (title.length < 8) {
+      return [
+        'title must be greater than 8 characters !',
+        undefined
+      ];
+    }
+
     return [
       undefined,
       new CreateTodoDTO(title),

@@ -98,4 +98,39 @@ describe('Test on Routes', () => {
 
   });
 
+  test('Should return create a new todo on api/todos', async () => {
+    const response = await request(testServer.app)
+      .post('/api/v1/todos')
+      .send(todos[0])
+      .expect(201);
+
+    expect(response.body).toEqual({
+      id: expect.any(String),
+      title: todos[0].title,
+      completedAt: null,
+    });
+  });
+
+  test('Should return an error if no title were provided api/todos', async () => {
+    const response = await request(testServer.app)
+      .post('/api/v1/todos')
+      .send({})
+      .expect(400);
+
+    expect(response.body).toEqual({
+      error: 'title property is required !'
+    });
+  });
+
+  test('Should return an error if no title is short api/todos', async () => {
+    const response = await request(testServer.app)
+      .post('/api/v1/todos')
+      .send({ title: 'abc' })
+      .expect(400);
+
+    expect(response.body).toEqual({
+      error: 'title must be greater than 8 characters !'
+    });
+  });
+
 });
