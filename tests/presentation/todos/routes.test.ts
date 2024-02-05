@@ -13,13 +13,16 @@ describe('Test on Routes', () => {
     await testServer.start();
   });
 
+  beforeEach(async () => {
+    await prisma.todo.deleteMany();
+  });
+
   afterAll(() => {
     testServer.close();
   });
 
   test('Should return todos api/todos', async () => {
 
-    await prisma.todo.deleteMany();
     await prisma.todo.createMany({
       data: todos
     });
@@ -33,12 +36,30 @@ describe('Test on Routes', () => {
 
     body.forEach((todo: any, index: number) => {
       expect(todo).toEqual({
-        id: expect.any(String),
-        title: todos[index].title,
-        completedAt: null,
+        id: todo.id,
+        title: todo.title,
+        completedAt: todo.completedAt,
       });
     });
     
+  });
+
+  test('Should return a todo api/todos/:id', async () => {
+
+    const todo = await prisma.todo.create({
+      data: todos[0]
+    });
+
+    const { body } = await request(testServer.app)
+      .get(`/api/v1/todos/${todo.id}`)
+      .expect(200);
+
+    expect(body).toEqual({
+      id: todo.id,
+      title: todo.title,
+      completedAt: todo.completedAt,
+    });
+
   });
 
 });
