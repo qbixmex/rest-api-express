@@ -154,8 +154,16 @@ const config: Config = {
   // code to configure or set up the testing
   // environment for each test.
 
-  // setupFiles: ['dotenv/config'],
+  setupFiles: [
+    "<rootDir>setupTests.ts",
+  ],
 }
+```
+
+## Create ```setupTest.ts```:
+
+```bash
+touch setupTest.ts
 ```
 
 ## Create scripts for testing in ```package.json```
