@@ -1,7 +1,7 @@
 import { Request, Response } from "express";
-import prisma from './data/postgres';
 import { CreateTodoDTO, UpdateTodoDTO } from '../../domain/dtos/todos';
 import { TodoRepository } from "../../domain";
+import { Prisma } from "@prisma/client";
 
 class TodoController {
 
@@ -28,8 +28,14 @@ class TodoController {
     _request: Request,
     response: Response
   ) => {
-    const todos = await this.todoRepository.getAll();
-    return response.status(200).json(todos);
+    try {
+      const todos = await this.todoRepository.getAll();
+      return response.status(200).json(todos);
+    } catch(error) {
+      if (error instanceof Prisma.PrismaClientKnownRequestError) {
+        return response.status(400).json({ error });
+      }
+    }
   };
 
   public getTodoById = async (

@@ -8,7 +8,8 @@ type Options = {
 };
 
 class Server {
-  private app = express();
+  public readonly app = express();
+  private serverListener?: any;
   private readonly port: number;
   private readonly routes: Router;
   private readonly public_path: string;
@@ -20,7 +21,7 @@ class Server {
   }
 
   async start() {
-    this.app.listen(this.port, () => {
+    this.serverListener = this.app.listen(this.port, () => {
       console.log(`Server running at port: ${this.port}`);
     });
 
@@ -37,6 +38,10 @@ class Server {
       console.log(indexPath)
       response.sendFile(indexPath);
     });
+  }
+
+  public close() {
+    this.serverListener?.close();
   }
 }
 
