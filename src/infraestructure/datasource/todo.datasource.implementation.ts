@@ -1,5 +1,6 @@
 import { CreateTodoDTO, TodoDataSource, TodoEntity, UpdateTodoDTO } from "../../domain";
 import prisma from '../../presentation/todos/data/postgres';
+import { validate as isValidUUID } from 'uuid';
 
 class TodoDataSourceImplementation implements TodoDataSource {
 
@@ -17,12 +18,17 @@ class TodoDataSourceImplementation implements TodoDataSource {
   }
 
   async findById(id: string): Promise<TodoEntity> {
+
+    if (!isValidUUID(id)) {
+      throw `Invalid id: ${id} !`;
+    }
+
     const todo = await prisma.todo.findFirst({
       where: { id }
     });
 
     if (!todo) {
-      throw `Todo with id: ${id}, not found ❗️`;
+      throw `Todo with id: ${id}, not found !`;
     }
 
     return TodoEntity.fromObject(todo);

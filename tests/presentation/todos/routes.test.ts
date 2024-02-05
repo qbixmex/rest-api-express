@@ -62,4 +62,40 @@ describe('Test on Routes', () => {
 
   });
 
+  test('Should return an error if todo id is not a valid uuid on api/todos/:id', async () => {
+
+    await prisma.todo.create({
+      data: todos[0]
+    });
+
+    const testId = 'abc123';
+
+    const { body } = await request(testServer.app)
+      .get(`/api/v1/todos/${testId}`)
+      .expect(404);
+
+    expect(body).toEqual({
+      error: `Invalid id: ${testId} !`
+    });
+
+  });
+
+  test('Should return an error if todo id doesn\'t exist on api/todos/:id', async () => {
+
+    await prisma.todo.create({
+      data: todos[0]
+    });
+
+    const testId = 'a3b21925-3854-451f-94b7-3ea86b45f9c1';
+
+    const { body } = await request(testServer.app)
+      .get(`/api/v1/todos/${testId}`)
+      .expect(404);
+
+    expect(body).toEqual({
+      error: `Todo with id: ${testId}, not found !`
+    });
+
+  });
+
 });
