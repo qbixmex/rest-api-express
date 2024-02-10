@@ -1,6 +1,6 @@
 import { Request, Response } from "express";
 import { CreateTodoDTO, UpdateTodoDTO, DeleteTodoDTO } from '../../domain/dtos/todos';
-import { TodoRepository } from "../../domain";
+import { CustomError, TodoRepository } from "../../domain";
 import { Prisma } from "@prisma/client";
 
 class TodoController {
@@ -19,9 +19,12 @@ class TodoController {
       return response.status(400).json({ error });
     }
 
-    const todoEntity = await this.todoRepository.create(createTodoDTO!);
-
-    return response.status(201).json(todoEntity);
+    try {
+      const todoEntity = await this.todoRepository.create(createTodoDTO!);
+      return response.status(201).json(todoEntity);
+    } catch (error) {
+      this.handleError(response, error);
+    }
   };
 
   public getTodos = async (
@@ -33,7 +36,7 @@ class TodoController {
       return response.status(200).json(todos);
     } catch(error) {
       if (error instanceof Prisma.PrismaClientKnownRequestError) {
-        return response.status(400).json({ error });
+        this.handleError(response, error);
       }
     }
   };
@@ -47,7 +50,7 @@ class TodoController {
       const todo = await this.todoRepository.findById(todoId);
       return response.json(todo);
     } catch (error) {
-      return response.status(404).json({ error });
+      this.handleError(response, error);
     }
   };
 
@@ -73,7 +76,7 @@ class TodoController {
       const updatedTodo = await this.todoRepository.updateById(updateTodoDTO!);
       return response.json(updatedTodo);
     } catch (error) {
-      return response.status(404).json({ error });
+      this.handleError(response, error);
     }
 
   };
@@ -98,9 +101,18 @@ class TodoController {
         message: `Todo with id: ${deletedTodo.id} deleted successfully !`,
       });
     } catch (error) {
-      return response.status(404).json({ error });
+      this.handleError(response, error);
     }
 
+  }
+
+  private handleError(response: Response, error: unknown) {
+    if (error instanceof CustomError) {
+      response.status(error.statusCode).json({ error: error.message });
+      return;
+    }
+    console.log(error);
+    response.status(500).json('Unexpected error, check logs !');
   }
 
 };

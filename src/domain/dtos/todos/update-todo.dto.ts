@@ -50,10 +50,9 @@ class UpdateTodoDTO {
     }
 
     if (completedAtDate) {
-      completedAtDate = new Date(completedAtDate);
-      if (completedAtDate.toString() === 'Invalid Date') {
+      if (new Date(completedAtDate).toString() === 'Invalid Date') {
         return [
-          'completedAt property must be a valid date !',
+          `completedAt property must be a valid date, "${completedAtDate}" !`,
           undefined
         ];
       }

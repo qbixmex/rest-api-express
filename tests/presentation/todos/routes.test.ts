@@ -72,7 +72,7 @@ describe('Test on Routes', () => {
 
     const { body } = await request(testServer.app)
       .get(`/api/v1/todos/${testId}`)
-      .expect(404);
+      .expect(400);
 
     expect(body).toEqual({
       error: `Invalid id: ${testId} !`
@@ -232,7 +232,24 @@ describe('Test on Routes', () => {
     });
   });
 
-  test('Should return 400 response on update if no data was submitted', async () => {
+  test('Should return 400 response on update if date is not valid', async () => {
+    const todo = await prisma.todo.create({ data: todos[1] });
+
+    const dataTest = {
+      completedAt: 'abc123'
+    };
+
+    const { body } = await request(testServer.app)
+      .patch(`/api/v1/todos/${todo.id}`)
+      .send(dataTest)
+      .expect(400);
+
+    expect(body).toEqual({
+      error: `completedAt property must be a valid date, "${dataTest.completedAt}" !`
+    });
+  });
+
+  test('Should return 400 response on update if no data submitted', async () => {
     const todo = await prisma.todo.create({ data: todos[1] });
 
     const dataTest = {};
