@@ -1,4 +1,3 @@
-import { TodoDataSource } from '../datasources';
 import { CreateTodoDTO, UpdateTodoDTO } from '../dtos/todos';
 import { TodoEntity } from '../entities';
 

@@ -1,5 +1,5 @@
 import { Request, Response } from "express";
-import { CreateTodoDTO, UpdateTodoDTO } from '../../domain/dtos/todos';
+import { CreateTodoDTO, UpdateTodoDTO, DeleteTodoDTO } from '../../domain/dtos/todos';
 import { TodoRepository } from "../../domain";
 import { Prisma } from "@prisma/client";
 
@@ -84,11 +84,18 @@ class TodoController {
   ) => {
     const todoId = request.params.id;
 
+    const [ error ] = DeleteTodoDTO.delete({
+      id: todoId,
+    });
+
+    if (error) {
+      return response.status(400).json({ error });
+    }
+
     try {
       const deletedTodo = await this.todoRepository.deleteById(todoId);
       return response.json({
-        message: `Todo deleted successfully 👍✅`,
-        deletedTodo
+        message: `Todo with id: ${deletedTodo.id} deleted successfully !`,
       });
     } catch (error) {
       return response.status(404).json({ error });

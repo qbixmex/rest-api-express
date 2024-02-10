@@ -246,4 +246,40 @@ describe('Test on Routes', () => {
       error: 'title and completedAt are mandatory !'
     });
   });
+
+  test('Should return 400 response on delete if not a valid UUID', async () => {
+    const testId = '123abc';
+
+    const { body } = await request(testServer.app)
+      .delete(`/api/v1/todos/${testId}`)
+      .expect(400);
+
+    expect(body).toEqual({
+      error: `Todo id: ${testId}, is not valid uuid !`
+    });
+  });
+
+  test('Should return 404 response on delete if not found', async () => {
+    const testId = 'a3b21925-3854-451f-94b7-3ea86b45f9c1';
+
+    const { body } = await request(testServer.app)
+      .delete(`/api/v1/todos/${testId}`)
+      .expect(404);
+
+    expect(body).toEqual({
+      error: `Todo with id: ${testId}, not found !`
+    });
+  });
+
+  test('Should delete a todo on delete', async () => {
+    const todo = await prisma.todo.create({ data: todos[1] });
+
+    const { body } = await request(testServer.app)
+      .delete(`/api/v1/todos/${todo.id}`)
+      .expect(200);
+
+    expect(body).toEqual({
+      message: `Todo with id: ${todo.id} deleted successfully !`,
+    });
+  });
 });
