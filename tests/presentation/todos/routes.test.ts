@@ -133,4 +133,117 @@ describe('Test on Routes', () => {
     });
   });
 
+  test('Should update a todos on api/todos/:id', async () => {
+    
+    const todo = await prisma.todo.create({ data: todos[0] });
+
+    const dataTest = {
+      title: 'Test todo updated',
+      completedAt: '2022-10-02T14:22:15.132Z'
+    };
+
+    const { body } = await request(testServer.app)
+      .patch(`/api/v1/todos/${todo.id}`)
+      .send(dataTest)
+      .expect(200);
+
+    expect(body).toEqual({
+      id: expect.any(String),
+      title: dataTest.title,
+      completedAt: dataTest.completedAt,
+    });
+  });
+
+  test('Should update only the title at api/todos/:id', async () => {
+    const todo = await prisma.todo.create({ data: todos[1] });
+
+    const dataTest = {
+      title: 'Test title updated'
+    };
+
+    const { body } = await request(testServer.app)
+      .patch(`/api/v1/todos/${todo.id}`)
+      .send(dataTest)
+      .expect(200);
+
+    expect(body).toEqual({
+      id: expect.any(String),
+      title: dataTest.title,
+      completedAt: todo.completedAt,
+    });
+  });
+
+  test('Should update only the completedAt at api/todos/:id', async () => {
+    const todo = await prisma.todo.create({ data: todos[1] });
+
+    const dataTest = {
+      completedAt: '2022-12-02T18:15:45.744Z'
+    };
+
+    const { body } = await request(testServer.app)
+      .patch(`/api/v1/todos/${todo.id}`)
+      .send(dataTest)
+      .expect(200);
+
+    expect(body).toEqual({
+      id: expect.any(String),
+      title: todo.title,
+      completedAt: dataTest.completedAt,
+    });
+  });
+
+  test('Should return 400 response on update if id is not valid', async () => {
+    await prisma.todo.create({ data: todos[1] });
+
+    const fakeId = '123abc';
+
+    const dataTest = {
+      title: 'Test todo updated',
+      completedAt: '2024-06-15T10:12:45.456Z'
+    };
+
+    const { body } = await request(testServer.app)
+      .patch(`/api/v1/todos/${fakeId}`)
+      .send(dataTest)
+      .expect(400);
+
+    expect(body).toEqual({
+      error: `Todo id: ${fakeId}, is not valid uuid !`
+    });
+  });
+
+  test('Should return 404 response on update if todo not found', async () => {
+    await prisma.todo.create({ data: todos[1] });
+
+    const fakeId = 'a3b21925-3854-451f-94b7-3ea86b45f9c1';
+
+    const dataTest = {
+      title: 'Test todo updated',
+      completedAt: '2022-12-02T18:15:45.744Z'
+    };
+
+    const { body } = await request(testServer.app)
+      .patch(`/api/v1/todos/${fakeId}`)
+      .send(dataTest)
+      .expect(404);
+
+    expect(body).toEqual({
+      error: `Todo with id: ${fakeId}, not found !`
+    });
+  });
+
+  test('Should return 400 response on update if no data was submitted', async () => {
+    const todo = await prisma.todo.create({ data: todos[1] });
+
+    const dataTest = {};
+
+    const { body } = await request(testServer.app)
+      .patch(`/api/v1/todos/${todo.id}`)
+      .send(dataTest)
+      .expect(400);
+
+    expect(body).toEqual({
+      error: 'title and completedAt are mandatory !'
+    });
+  });
 });

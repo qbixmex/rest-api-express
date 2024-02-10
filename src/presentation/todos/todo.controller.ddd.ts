@@ -60,7 +60,7 @@ class TodoController {
   ) => {
     const todoId = request.params.id;
 
-    const [ error, updateTodoDTO ] = UpdateTodoDTO.create({
+    const [ error, updateTodoDTO ] = UpdateTodoDTO.update({
       ...request.body,
       id: todoId,
     });

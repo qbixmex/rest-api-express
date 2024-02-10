@@ -24,13 +24,20 @@ class UpdateTodoDTO {
     return outputObject;
   }
 
-  static create(props: { [ key: string ]: any }): [string?, UpdateTodoDTO?] {
+  static update(props: { [ key: string ]: any }): [string?, UpdateTodoDTO?] {
     const { id, title, completedAt } = props;
     let completedAtDate = completedAt;
 
     if (!uuidValidate(id)) {
       return [
-        `id: ${id}, must be a valid uuid !`,
+        `Todo id: ${id}, is not valid uuid !`,
+        undefined
+      ];
+    }
+
+    if (!title && !completedAt) {
+      return [
+        'title and completedAt are mandatory !',
         undefined
       ];
     }
@@ -57,6 +64,7 @@ class UpdateTodoDTO {
       new UpdateTodoDTO(id, title, completedAt),
     ];
   }
+
 }
 
 export default UpdateTodoDTO;
